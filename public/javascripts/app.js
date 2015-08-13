@@ -11,8 +11,15 @@ document.addEventListener("DOMContentLoaded", function() {
     circles.innerHTML = '';
   });
 
+  socket.on('update-player-list', function(data){
+    var playerList = '<li>' + data.join('</li><li>') + '</li>';
+    players.innerHTML = playerList;
+  });
+
 
   var circles = document.getElementById('circles');
+  // players <ul> element in the footer
+  var players = document.getElementById('players');
   var initials = '';
 
   circles.addEventListener('click', function(evt) {
@@ -34,6 +41,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   while (initials.length < 2 || initials.length > 8) {
     initials = prompt("Please enter your initials").toUpperCase();
+    if (initials.length > 1 && initials.length < 9) {
+        socket.emit('register-player', {initials: initials});
+    }
   }
 
   function addCircle(data) {
